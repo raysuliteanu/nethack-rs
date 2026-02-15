@@ -5,3 +5,4 @@ cscope.*
 doc/
 tmp/
 __pycache__/
+tools/isaac64_ref

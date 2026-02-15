@@ -44,6 +44,10 @@ nethack-types  ←── nethack-data    (data depends on types)
 
 **nethack-rng**: Dual-stream ISAAC64 RNG matching NetHack's output exactly. `NhRng` has `core` (gameplay) and `display` (cosmetic) streams. Uses a direct port of `isaac64.c` (not `rand_isaac`) because NetHack's custom 8-byte little-endian seeding must be matched for save/replay compatibility. Invalid arguments log warnings and return safe defaults (matching C's `impossible()` pattern).
 
+## Temporary Files
+
+Use `tmp/` (gitignored) for scratch files — commit message drafts, script output, etc. Use short descriptive filenames (e.g. `tmp/commit-phase1-foundation.md`) to avoid collisions.
+
 ## Key Conventions
 
 - C constant values are the ground truth — enum discriminants, flag bits, and array indices must match exactly
