@@ -1,15 +1,38 @@
-[package]
-name = "nethack-rs"
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
-description = "A rewrite of the classic nethack game in Rust"
 authors = ["Ray Suliteanu <raysuliteanu@proton.me>"]
+
+[workspace.dependencies]
+thiserror = "2"
+strum = { version = "0.27", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+bitflags = { version = "2", features = ["serde"] }
+color-eyre = "0.6"
+log = "0.4"
+env_logger = "0.11"
+rand_isaac = "0.5"
+rand_core = "0.10"
+
+nethack-types = { path = "crates/nethack-types" }
+nethack-data = { path = "crates/nethack-data" }
+nethack-rng = { path = "crates/nethack-rng" }
+
+[package]
+name = "nethack-rs"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "A rewrite of the classic nethack game in Rust"
 keywords = ["tui", "game"]
 categories = ["games"]
 
 [dependencies]
-anyhow = "1.0.101"
-clap = { version = "4.5.58", features = [
+clap = { version = "4", features = [
     "cargo",
     "derive",
     "wrap_help",
@@ -17,9 +40,10 @@ clap = { version = "4.5.58", features = [
     "string",
     "unstable-styles",
 ] }
-color-eyre = "0.6.3"
-config = { version = "0.15.6", default-features = false, features = ["toml"] }
-env_logger = "0.11.6"
-log = "0.4.25"
-strum = { version = "0.26.3", features = ["derive"] }
-thiserror = "2.0.18"
+color-eyre.workspace = true
+config = { version = "0.15", default-features = false, features = ["toml"] }
+env_logger.workspace = true
+log.workspace = true
+nethack-types.workspace = true
+nethack-data.workspace = true
+nethack-rng.workspace = true

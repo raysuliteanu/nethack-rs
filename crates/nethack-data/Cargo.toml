@@ -1,0 +1,11 @@
+[package]
+name = "nethack-data"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+nethack-types.workspace = true
+
+[dev-dependencies]
+strum.workspace = true

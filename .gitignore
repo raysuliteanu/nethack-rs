@@ -3,3 +3,5 @@
 tags
 cscope.*
 doc/
+tmp/
+__pycache__/

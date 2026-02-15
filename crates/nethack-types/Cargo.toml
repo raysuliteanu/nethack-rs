@@ -1,0 +1,11 @@
+[package]
+name = "nethack-types"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+bitflags.workspace = true
+serde.workspace = true
+strum.workspace = true
+thiserror.workspace = true
