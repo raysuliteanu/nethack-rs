@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: [-std=c89, -I/home/ray/src/nethack-rs/nethack/include, -x, c]
