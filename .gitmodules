@@ -1,0 +1,4 @@
+[submodule "nethack"]
+	path = nethack
+	url = git@github.com:NetHack/NetHack.git
+	branch = NetHack-3.6
