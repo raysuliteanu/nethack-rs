@@ -105,9 +105,7 @@ fn scan_map(raw: &str) -> ScanMapResult {
             buf.push((terrain as u8).wrapping_add(1));
         }
         // Pad to max_len with STONE+1 = 1
-        for _ in row.len()..max_len {
-            buf.push(1); // STONE + 1
-        }
+        buf.extend(std::iter::repeat_n(1u8, max_len - row.len()));
     }
 
     // Convert to string (C stores as char array)
@@ -165,10 +163,10 @@ fn get_object_id(name: &str, class_char: char) -> Option<i16> {
 
     // Exact match
     for (i, o) in OBJECTS.iter().enumerate() {
-        if let Some(fc) = filter_class {
-            if o.class != fc {
-                continue;
-            }
+        if let Some(fc) = filter_class
+            && o.class != fc
+        {
+            continue;
         }
         if o.name == name {
             return Some(i as i16);
@@ -177,10 +175,10 @@ fn get_object_id(name: &str, class_char: char) -> Option<i16> {
     // Case-insensitive fallback
     let name_lower = name.to_lowercase();
     for (i, o) in OBJECTS.iter().enumerate() {
-        if let Some(fc) = filter_class {
-            if o.class != fc {
-                continue;
-            }
+        if let Some(fc) = filter_class
+            && o.class != fc
+        {
+            continue;
         }
         if o.name.to_lowercase() == name_lower {
             return Some(i as i16);
