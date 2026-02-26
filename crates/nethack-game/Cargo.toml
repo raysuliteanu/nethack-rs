@@ -1,0 +1,15 @@
+[package]
+name = "nethack-game"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+nethack-types.workspace = true
+nethack-data.workspace = true
+nethack-rng.workspace = true
+color-eyre.workspace = true
+log.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+bitflags.workspace = true

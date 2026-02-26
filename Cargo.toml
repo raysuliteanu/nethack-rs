@@ -22,6 +22,7 @@ winnow = "0.7"
 nethack-types = { path = "crates/nethack-types" }
 nethack-data = { path = "crates/nethack-data" }
 nethack-rng = { path = "crates/nethack-rng" }
+nethack-game = { path = "crates/nethack-game" }
 
 [package]
 name = "nethack-rs"

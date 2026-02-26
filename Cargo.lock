@@ -335,6 +335,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "nethack-game"
+version = "0.1.0"
+dependencies = [
+ "bitflags",
+ "color-eyre",
+ "log",
+ "nethack-data",
+ "nethack-rng",
+ "nethack-types",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "nethack-rng"
 version = "0.1.0"
 dependencies = [
