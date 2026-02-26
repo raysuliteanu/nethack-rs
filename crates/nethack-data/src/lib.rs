@@ -1,3 +1,7 @@
+pub mod des_lexer;
+pub mod des_parser;
+pub mod dungeon_parser;
+pub mod lev_reader;
 pub mod monsters;
 pub mod objects;
 
@@ -10,7 +14,7 @@ mod tests {
 
     #[test]
     fn monster_count() {
-        assert_eq!(MONSTERS.len(), 384);
+        assert_eq!(MONSTERS.len(), 382);
     }
 
     #[test]

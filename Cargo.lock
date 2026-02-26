@@ -330,6 +330,8 @@ version = "0.1.0"
 dependencies = [
  "nethack-types",
  "strum",
+ "thiserror",
+ "winnow",
 ]
 
 [[package]]

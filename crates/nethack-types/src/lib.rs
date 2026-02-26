@@ -4,6 +4,7 @@ pub mod attack;
 pub mod attack_struct;
 pub mod color;
 pub mod door_state;
+pub mod dungeon;
 pub mod geno;
 pub mod location_type;
 pub mod material;
@@ -19,6 +20,7 @@ pub mod object_type;
 pub mod property;
 pub mod resistance;
 pub mod role;
+pub mod sp_lev;
 pub mod worn;
 
 pub use alignment::{Alignment, AlignmentMask};
@@ -46,3 +48,12 @@ pub use role::{
     RoleDefinition, RoleKind, RoleName,
 };
 pub use worn::WornMask;
+
+pub use dungeon::{
+    BranchDef, BranchDirection, BranchType, DungeonAlignment, DungeonDef, DungeonFlags,
+    DungeonTopology, LevelDef,
+};
+pub use sp_lev::{
+    DesFile, LevelFlags, LvlInitStyle, SpLevOpcode, SpMonVarFlag, SpObjVarFlag, SpOpcode,
+    SpOperand, SpecialLevel,
+};

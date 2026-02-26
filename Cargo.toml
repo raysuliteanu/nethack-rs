@@ -17,6 +17,7 @@ log = "0.4"
 env_logger = "0.11"
 rand_isaac = "0.5"
 rand_core = "0.10"
+winnow = "0.7"
 
 nethack-types = { path = "crates/nethack-types" }
 nethack-data = { path = "crates/nethack-data" }

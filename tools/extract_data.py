@@ -372,6 +372,9 @@ def preprocess(text):
     """
     text = strip_c_comments(text)
     text = join_continuation_lines(text)
+    # CHARON is not defined in the NetHack build, so treat #ifdef CHARON
+    # blocks the same as #if 0 (exclude their content).
+    text = re.sub(r'^#\s*ifdef\s+CHARON\b', '#if 0', text, flags=re.MULTILINE)
     text = strip_if0_blocks(text)
     text = strip_preprocessor_conditionals(text)
     text = expand_inline_macros(text)
@@ -1838,8 +1841,8 @@ def main():
     print(f"Found {len(objects)} objects")
 
     # Validate counts
-    if len(monsters) != 384:
-        print(f"WARNING: Expected 384 monsters, got {len(monsters)}", file=sys.stderr)
+    if len(monsters) != 382:
+        print(f"WARNING: Expected 382 monsters, got {len(monsters)}", file=sys.stderr)
     if len(objects) != 454:
         print(f"WARNING: Expected 454 objects, got {len(objects)}", file=sys.stderr)
 
