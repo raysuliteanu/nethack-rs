@@ -30,8 +30,9 @@ nethack-rs/
 
 ```
 Phase 1 (Types, Data, RNG)
-    └──> Phase 2 (Compilers, Parsers)
+    └──> Phase 2a (Binary Parsers — Complete)
             └──> Phase 3 (Map, Level Gen, GameState)
+    └──> Phase 2b (Text .des Compiler — Deferred, not on critical path)
                     ├──> Phase 4 (Monsters, Objects, Player)
                     │       └──> Phase 6 (Core Game Systems)
                     │               └──> Phase 7 (Save/Restore, Polish)
@@ -40,15 +41,15 @@ Phase 1 (Types, Data, RNG)
 
 ## Estimated Scope Per Phase
 
-| Phase | Approx. C Lines | Key Challenge |
-|-------|-----------------|---------------|
-| 1 | ~15,000 (headers + static data) | Faithfully transcribing 380+ monster defs, 500+ object defs |
-| 2 | ~8,000 (compilers + parsers) | Reverse-engineering binary formats from C code |
-| 3 | ~12,000 (level generation) | Complex procedural generation with many special cases |
-| 4 | ~10,000 (entity creation) | Object identification and randomization system |
-| 5 | ~8,000 (display) | Vision algorithm, glyph system, ratatui layout |
-| 6 | ~120,000 (core gameplay) | Sheer volume; deeply interconnected systems |
-| 7 | ~19,000 (save/restore + misc) | Serialization of complex graph of objects |
+| Phase | Approx. C Lines                 | Key Challenge                                               |
+| ----- | ------------------------------- | ----------------------------------------------------------- |
+| 1     | ~15,000 (headers + static data) | Faithfully transcribing 380+ monster defs, 500+ object defs |
+| 2     | ~8,000 (compilers + parsers)    | Reverse-engineering binary formats from C code              |
+| 3     | ~12,000 (level generation)      | Complex procedural generation with many special cases       |
+| 4     | ~10,000 (entity creation)       | Object identification and randomization system              |
+| 5     | ~8,000 (display)                | Vision algorithm, glyph system, ratatui layout              |
+| 6     | ~120,000 (core gameplay)        | Sheer volume; deeply interconnected systems                 |
+| 7     | ~19,000 (save/restore + misc)   | Serialization of complex graph of objects                   |
 
 ---
 
@@ -148,74 +149,42 @@ exactly for reproducible testing.
 
 ---
 
-## Phase 2: Dungeon Compiler, Level Compiler, and Binary Parsers
+## Phase 2: Dungeon and Level Parsers
 
-**Goal:** Parse the binary formats produced by the C compilers, then port the
-text parsers to replace the C yacc/lex compilers entirely.
+**Goal:** Parse the binary `.lev` format produced by C's `lev_comp` and the text
+`dungeon.def` file, so the Rust game can load C-compiled assets.
 
-### Sub-phase 2a: Binary Format Parsers (priority)
+### Sub-phase 2a: Binary Format Parsers — **Complete**
 
-Parse the binary output of the C compilers so the Rust game can load
-C-compiled assets during development.
+`lev_reader.rs` parses all 120 C-compiled `.lev` files into `Vec<SpLevOpcode>`.
+`dungeon_parser.rs` parses `dungeon.def` into `DungeonTopology` (8 dungeons).
 
 ```rust
 // nethack-data
 
-pub struct DungeonTopology {
-    pub dungeons: Vec<DungeonDef>,
-    pub levels: Vec<SpecialLevelDef>,
-    pub branches: Vec<BranchDef>,
-}
-
-pub fn parse_dungeon_binary(data: &[u8]) -> Result<DungeonTopology>;
-
-pub struct SpecialLevel {
-    pub opcodes: Vec<Opcode>,
-}
-
-pub enum Opcode {
-    Message(String),
-    Monster(MonsterPlacement),
-    Object(ObjectPlacement),
-    Room(RoomDef),
-    // all SPO_* opcodes from sp_lev.h
-}
-
-pub fn parse_level_binary(data: &[u8]) -> Result<SpecialLevel>;
-```
-
-### Sub-phase 2b: Text Format Parsers
-
-Replace the C yacc/lex compilers with Rust parsers for `dungeon.def` and `.des`
-files.
-
-```rust
+pub fn read_lev(data: &[u8]) -> Result<Vec<SpLevOpcode>>;
 pub fn parse_dungeon_def(input: &str) -> Result<DungeonTopology>;
-pub fn parse_des_file(input: &str) -> Result<SpecialLevel>;
 ```
+
+### Sub-phase 2b: Text `.des` Compiler — **Deferred**
+
+A Rust reimplementation of C's `lev_comp` (`.des` → bytecode) was started
+(`des_lexer.rs`, `des_parser.rs`) and matches 10/120 levels. This is not on the
+critical path: Phase 3 loads levels via `lev_reader::read_lev()` from the
+pre-compiled `.lev` files. The `.des` compiler can be resumed later or developed
+in parallel.
 
 ### C Files Ported
 
-- `util/dgn_comp.l`, `util/dgn_comp.y`, `util/dgn_main.c` — dungeon compiler
-- `util/lev_comp.l`, `util/lev_comp.y`, `util/lev_main.c` — level compiler
-- `include/dgn_file.h` — `tmpdungeon`, `tmplevel`, `tmpbranch` structs
 - `include/sp_lev.h` — all `SPO_*` opcodes, level data structs
+- `include/dgn_file.h` — `tmpdungeon`, `tmplevel`, `tmpbranch` structs
 - `src/sp_lev.c` — special level binary format (reading side)
-- `src/dlb.c`, `util/dlb_main.c` — data library format (optional, low priority)
-
-### Crates
-
-- `winnow` — binary and text format parsing (zero-copy, efficient)
-- `pest` — text format parsing for `.def` and `.des` (grammar-based, optional)
-- `clap` — CLI for the compiler tools
 
 ### Testable at End of Phase
 
-- Parse C-compiled `dungeon.pdf`, verify topology matches `dungeon.def` expectations
-- Parse all C-compiled `.lev` files without error
-- Text parsers: parse `dungeon.def`, produce binary output identical to C `dgn_comp`
-- Text parsers: parse all 40+ `.des` files without error
-- Fuzz tests on binary parsers with random input
+- `lev_reader` parses all 120 `.lev` fixture files without error
+- `dungeon_parser` produces 8 dungeons with correct depths and connections
+- Spot-checks: castle topology, Sokoban entry, Gehennom flags
 
 ---
 
