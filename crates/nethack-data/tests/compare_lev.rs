@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 const DAT_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../nethack/dat");
-const FIXTURES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/lev");
+const FIXTURES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../data/lev");
 
 /// Build a mapping from level name → (des filename, SpecialLevel opcodes).
 fn build_rust_levels() -> HashMap<String, (String, Vec<SpLevOpcode>)> {
